@@ -1,0 +1,24 @@
+[
+    {
+      "id": "02137",
+      "model": "gitara",
+      "construction": "bolt-on",
+      "scale": 22.5,
+      "wood": {
+        "body": "mahogany",
+        "top": "maple",
+        "fretboard": "rosewood"
+      }
+    },
+    {
+      "id": "02138",
+      "model": "gitara1",
+      "construction": "bolt-in",
+      "scale": 22.5,
+      "wood": {
+        "body": "maple",
+        "top": "mahogany",
+        "fretboard": "rosewood"
+      }
+    }
+  ]
