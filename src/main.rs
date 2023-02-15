@@ -1,7 +1,6 @@
-use std::{fs, collections::HashMap};
+use std::fs;
 use actix_web::{get, web::{self}, HttpServer, Responder, App, Result, error};
 use serde::{Serialize, Deserialize};
-use serde_json::Value;
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Wood {
@@ -40,7 +39,7 @@ async fn get_guitar(guitar_id: web::Path<String>) -> Result<impl Responder> {
 
     match matching_guitar {
         Some(matching_guitar) => Ok(web::Json(matching_guitar)),
-        None => Err(error::ErrorNotFound("Guitar not found")),
+        None => Err(error::ErrorNotFound("Error: Guitar with specified ID doesn't exist.")),
     }
 }
 
