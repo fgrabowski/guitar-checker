@@ -1,6 +1,6 @@
 use actix_web::{
     error, get, post,
-    web::{self},
+    web,
     App, HttpServer, Responder, Result,
 };
 use serde::{Deserialize, Serialize};
@@ -24,17 +24,17 @@ struct Guitar {
 
 #[get("/")]
 async fn get_all() -> Result<impl Responder> {
-    let data = fs::read_to_string("src/data.json").expect("Unable to read file");
+    let data = fs::read_to_string("src/data.json")?;
     let json: serde_json::Value =
-        serde_json::from_str(&data).expect("JSON does not have correct format.");
+        serde_json::from_str(&data)?;
     Ok(web::Json(json))
 }
 
 #[get("/{guitar_id}")]
 async fn get_guitar(guitar_id: web::Path<String>) -> Result<impl Responder> {
-    let data = fs::read_to_string("src/data.json").expect("Unable to read file");
+    let data = fs::read_to_string("src/data.json")?;
 
-    let deserialized: Vec<Guitar> = serde_json::from_str(&data).unwrap();
+    let deserialized: Vec<Guitar> = serde_json::from_str(&data)?;
 
     let matching_guitar = deserialized
         .into_iter()
