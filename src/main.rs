@@ -1,5 +1,23 @@
 use std::fs;
 use actix_web::{get, post, web::{self}, HttpResponse, HttpServer, Responder, App, Result, guard::Get};
+use serde::{Serialize, Deserialize};
+
+
+#[derive(Serialize, Deserialize, Debug)]
+struct Wood {
+    body: String,
+    top: String,
+    fretboard: String,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+struct Guitar {
+    id: String,
+    model: String,
+    construction: String,
+    scale: f32,
+    wood: Wood,
+}
 
 #[get("/")]
 async fn get_all() -> Result<impl Responder> {
@@ -7,7 +25,8 @@ async fn get_all() -> Result<impl Responder> {
         .expect("Unable to read file");
     let json: serde_json::Value = serde_json::from_str(&data)
         .expect("JSON does not have correct format.");
-    Ok(web::Json(json))
+    let deserialized: Vec<Guitar> = serde_json::from_str(&json.to_string()).unwrap();
+    Ok(web::Json(deserialized))
 }
 
 // #[get("/{guitar_id}")]
