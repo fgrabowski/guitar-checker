@@ -1,5 +1,5 @@
 use std::fs;
-use actix_web::{get, web::{self}, HttpServer, Responder, App, Result, error};
+use actix_web::{get, web::{self}, HttpServer, Responder, App, Result, error, post};
 use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -43,12 +43,18 @@ async fn get_guitar(guitar_id: web::Path<String>) -> Result<impl Responder> {
     }
 }
 
+#[post("/")]
+async fn index(guitar: web::Json<Guitar>) -> Result<String> {
+    Ok(format!("Added {}", guitar.id))
+}
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
             .service(get_all)
             .service(get_guitar)
+            .service(index)
     })
     .bind(("127.0.0.1", 8080))?
     .run()
