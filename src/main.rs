@@ -1,6 +1,7 @@
-use std::fs;
-use actix_web::{get, post, web::{self}, HttpResponse, HttpServer, Responder, App, Result, guard::Get, error};
+use std::{fs, collections::HashMap};
+use actix_web::{get, web::{self}, HttpServer, Responder, App, Result, error};
 use serde::{Serialize, Deserialize};
+use serde_json::Value;
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Wood {
@@ -34,20 +35,21 @@ async fn get_guitar(guitar_id: web::Path<String>) -> Result<impl Responder> {
 
     let deserialized: Vec<Guitar> = serde_json::from_str(&data).unwrap();
 
-    let matching_guitar = deserialized.into_iter().find(|g| g.id.to_string() == guitar_id.to_string());
+    let matching_guitar = deserialized.into_iter().find(|g| g.id == guitar_id.to_string());
+    
 
     match matching_guitar {
-        Some(guitar) => Ok(web::Json(guitar)),
+        Some(matching_guitar) => Ok(web::Json(matching_guitar)),
         None => Err(error::ErrorNotFound("Guitar not found")),
     }
 }
-
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
             .service(get_all)
+            .service(get_guitar)
     })
     .bind(("127.0.0.1", 8080))?
     .run()
